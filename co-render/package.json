@@ -1,7 +1,7 @@
 {
   "name": "contaoffice-backend",
   "version": "1.0.0",
-  "description": "ContaOffice API — Express + MongoDB para Railway.app",
+  "description": "ContaOffice API - Express + MongoDB para Railway.app",
   "main": "server.js",
   "type": "module",
   "engines": { "node": ">=20.0.0" },
@@ -10,13 +10,14 @@
     "dev":   "nodemon server.js"
   },
   "dependencies": {
-    "bcryptjs":          "^2.4.3",
-    "cors":              "^2.8.5",
-    "dotenv":            "^16.4.5",
-    "express":           "^4.19.2",
-    "jsonwebtoken":      "^9.0.2",
-    "mongoose":          "^8.4.4",
-    "puppeteer":         "^21.0.0"
+    "bcryptjs":           "^2.4.3",
+    "cors":               "^2.8.5",
+    "dotenv":             "^16.4.5",
+    "express":            "^4.19.2",
+    "jsonwebtoken":       "^9.0.2",
+    "mongoose":           "^8.4.4",
+    "@sparticuz/chromium": "^119.0.2",
+    "puppeteer-core":     "^21.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.4"
