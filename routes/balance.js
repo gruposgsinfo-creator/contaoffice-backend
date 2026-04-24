@@ -1,5 +1,5 @@
 import { Router }  from 'express';
-import Balance      from '../models/Balance.js';
+import Balance from '../models/balance.js';
 import { protect }  from '../middleware/auth.js';
 
 const router = Router();
