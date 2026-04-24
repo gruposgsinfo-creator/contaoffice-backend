@@ -1,3 +1,4 @@
+// ContaOffice Backend v2.1
 import 'dotenv/config';
 import express  from 'express';
 import cors     from 'cors';
