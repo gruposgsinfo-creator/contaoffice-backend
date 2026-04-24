@@ -1,0 +1,35 @@
+import mongoose from 'mongoose';
+
+const schema = new mongoose.Schema({
+  empresa_id:   { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
+  name:         { type: String, required: true, trim: true },
+  rut:          { type: String, required: true },
+  nacimiento:   String,
+  genero:       String,
+  nacionalidad: String,
+  estado_civil: String,
+  domicilio:    String,
+  region:       String,
+  comuna:       String,
+  email:        String,
+  telefono:     String,
+  cargo:        String,
+  contrato:     String,
+  jornada:      String,
+  sueldo:       Number,
+  ingreso:      String,
+  termino:      String,
+  causal:       String,
+  afp:          String,
+  cuenta_afp:   String,
+  isapre:       String,
+  plan_salud:   String,
+  plan_uf:      Number,
+  banco:        String,
+  tipo_cuenta:  String,
+  num_cuenta:   String,
+  notas:        String,
+  status:       { type: String, enum: ['activo','inactivo'], default: 'activo' },
+}, { timestamps: true });
+
+export default mongoose.model('Trabajador', schema);
