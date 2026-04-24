@@ -1,5 +1,5 @@
 import { Router }  from 'express';
-import RRHH         from '../models/RRHH.js';
+import RRHH from '../models/rrhh.js';
 import { protect }  from '../middleware/auth.js';
 
 const router = Router();
