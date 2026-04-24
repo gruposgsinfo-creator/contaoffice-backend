@@ -3,11 +3,15 @@ import express  from 'express';
 import cors     from 'cors';
 import mongoose from 'mongoose';
 
-import authRoutes      from './routes/auth.js';
-import companyRoutes   from './routes/companies.js';
-import taskRoutes      from './routes/tasks.js';
+import authRoutes         from './routes/auth.js';
+import companyRoutes      from './routes/companies.js';
+import taskRoutes         from './routes/tasks.js';
+import trabajadorRoutes   from './routes/trabajadores.js';
+import rrhhRoutes         from './routes/rrhh.js';
+import balanceRoutes      from './routes/balance.js';
+import ivaRoutes          from './routes/iva.js';
 
-// sii route cargado dinámicamente para no crashear si hay error
+// SII route cargado dinámicamente (requiere Puppeteer)
 let siiRoutes = null;
 try {
   const m = await import('./routes/sii.js');
@@ -24,9 +28,13 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.set('trust proxy', 1);
 
-app.use('/api/auth',      authRoutes);
-app.use('/api/companies', companyRoutes);
-app.use('/api/tasks',     taskRoutes);
+app.use('/api/auth',         authRoutes);
+app.use('/api/companies',    companyRoutes);
+app.use('/api/tasks',        taskRoutes);
+app.use('/api/trabajadores', trabajadorRoutes);
+app.use('/api/rrhh',         rrhhRoutes);
+app.use('/api/balance',      balanceRoutes);
+app.use('/api/iva',          ivaRoutes);
 if (siiRoutes) app.use('/api/sii', siiRoutes);
 
 app.get('/api/health', (_req, res) =>
@@ -51,4 +59,4 @@ mongoose
   .catch(err => {
     console.error('❌ MongoDB error:', err.message);
     process.exit(1);
-  });
+  });update server.js - add new routes
