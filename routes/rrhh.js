@@ -1,13 +1,26 @@
 import { Router }  from 'express';
-import RRHH from '../models/rrhh.js';
 import { protect }  from '../middleware/auth.js';
+
+// Modelo cargado dinámicamente para evitar problemas de case sensitivity
+let RRHH = null;
+try {
+  const m = await import('../models/rrhh.js');
+  RRHH = m.default;
+} catch(e) {
+  try {
+    const m = await import('../models/RRHH.js');
+    RRHH = m.default;
+  } catch(e2) {
+    console.error('No se pudo cargar modelo RRHH:', e2.message);
+  }
+}
 
 const router = Router();
 router.use(protect);
 
-// GET /api/rrhh?empresa_id=&mes=&anio=
 router.get('/', async (req, res) => {
   try {
+    if (!RRHH) return res.status(503).json({ error: 'Modelo RRHH no disponible.' });
     const { empresa_id, mes, anio } = req.query;
     const query = {};
     if (empresa_id) query.empresa_id = empresa_id;
@@ -18,9 +31,9 @@ router.get('/', async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// POST /api/rrhh — crear o actualizar por empresa+mes+anio (upsert)
 router.post('/', async (req, res) => {
   try {
+    if (!RRHH) return res.status(503).json({ error: 'Modelo RRHH no disponible.' });
     const { empresa_id, mes, anio, ...rest } = req.body;
     const doc = await RRHH.findOneAndUpdate(
       { empresa_id, mes, anio },
@@ -31,9 +44,9 @@ router.post('/', async (req, res) => {
   } catch (err) { res.status(400).json({ error: err.message }); }
 });
 
-// PATCH /api/rrhh/:id
 router.patch('/:id', async (req, res) => {
   try {
+    if (!RRHH) return res.status(503).json({ error: 'Modelo RRHH no disponible.' });
     const doc = await RRHH.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!doc) return res.status(404).json({ error: 'No encontrado.' });
     res.json(doc);
