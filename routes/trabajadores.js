@@ -1,5 +1,5 @@
 import { Router }    from 'express';
-import Trabajador     from '../models/Trabajador.js';
+import Trabajador     from '../models/trabajador.js';
 import { protect }   from '../middleware/auth.js';
 
 const router = Router();
