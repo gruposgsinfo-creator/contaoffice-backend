@@ -1,5 +1,5 @@
 import { Router }  from 'express';
-import IVA          from '../models/IVA.js';
+import IVA from '../models/iva.js';
 import { protect }  from '../middleware/auth.js';
 
 const router = Router();
