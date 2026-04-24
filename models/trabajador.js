@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-
+import trbajador form '../models/trabajador.js';
 const schema = new mongoose.Schema({
   empresa_id:   { type: mongoose.Schema.Types.ObjectId, ref: 'Company' },
   name:         { type: String, required: true, trim: true },
