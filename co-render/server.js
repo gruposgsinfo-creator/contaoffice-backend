@@ -1,52 +1,50 @@
-
 import 'dotenv/config';
 import express  from 'express';
 import cors     from 'cors';
 import mongoose from 'mongoose';
  
-import authRoutes      from './routes/auth.js';
-import companyRoutes   from './routes/companies.js';
-import taskRoutes      from './routes/tasks.js';
- 
-// sii route cargado dinámicamente para no crashear si hay error
-let siiRoutes = null;
-try {
-  const m = await import('./routes/sii.js');
-  siiRoutes = m.default;
-  console.log('✅ SII route cargado');
-} catch(err) {
-  console.warn('⚠️ SII route no disponible:', err.message);
-}
- 
-const app    = express();
-const PORT   = process.env.PORT || 4000;
+const app  = express();
+const PORT = process.env.PORT || 4000;
  
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.set('trust proxy', 1);
  
-app.use('/api/auth',      authRoutes);
-app.use('/api/companies', companyRoutes);
-app.use('/api/tasks',     taskRoutes);
-if (siiRoutes) app.use('/api/sii', siiRoutes);
+// Cargar rutas una por una con manejo de errores
+const routes = [
+  { path: '/api/auth',         file: './routes/auth.js' },
+  { path: '/api/companies',    file: './routes/companies.js' },
+  { path: '/api/tasks',        file: './routes/tasks.js' },
+  { path: '/api/trabajadores', file: './routes/trabajadores.js' },
+  { path: '/api/rrhh',         file: './routes/rrhh.js' },
+  { path: '/api/balance',      file: './routes/balance.js' },
+  { path: '/api/iva',          file: './routes/iva.js' },
+];
+ 
+const loaded = [];
+for (const r of routes) {
+  try {
+    const m = await import(r.file);
+    app.use(r.path, m.default);
+    loaded.push(r.path);
+    console.log('✅ Ruta cargada:', r.path);
+  } catch(err) {
+    console.error('❌ Error cargando', r.file, ':', err.message);
+  }
+}
  
 app.get('/api/health', (_req, res) =>
-  res.json({ status: 'ok', sii: !!siiRoutes, timestamp: new Date().toISOString() })
+  res.json({ status: 'ok', routes: loaded, timestamp: new Date().toISOString() })
 );
  
 app.use((_req, res) => res.status(404).json({ error: 'Ruta no encontrada.' }));
- 
-app.use((err, _req, res, _next) => {
-  console.error(err.message);
-  res.status(err.status || 500).json({ error: err.message || 'Error interno.' });
-});
  
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('✅ MongoDB conectado');
     app.listen(PORT, '0.0.0.0', () =>
-      console.log(`🚀 ContaOffice API en puerto ${PORT}`)
+      console.log('🚀 ContaOffice API en puerto', PORT)
     );
   })
   .catch(err => {
